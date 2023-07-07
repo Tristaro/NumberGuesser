@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Number Guessing Game</title>
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial, sans-serif;
+      background-color: #f1f1f1;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      color: #333;
+    }
+
+    p {
+      color: #555;
+    }
+
+    input[type="number"] {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      background-color: #4caf50;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background-color: #aaa;
+      cursor: not-allowed;
+    }
+
+    #result {
+      font-size: 18px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+    #retryButton {
+      margin-top: 20px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Number Guessing Game</h1>
+    <p>Guess a number between:</p>
+    <input type="number" id="rangeStart" value="1" min="1" max="100" step="1">
+    <p>and</p>
+    <input type="number" id="rangeEnd" value="100" min="1" max="100" step="1">
+    <br>
+    <button onclick="startGame()">Start Game</button>
+    <br><br>
+    <p>Enter your guess:</p>
+    <input type="number" id="guessInput" disabled>
+    <br>
+    <button onclick="checkGuess()" disabled>Submit</button>
+    <p id="result"></p>
+    <button onclick="resetGame()" id="retryButton">Play Again</button>
+  </div>
+
+  <script>
+    let rangeStart;
+    let rangeEnd;
+    let randomNumber;
+    let isGameOver = false;
+
+    // Function to start a new game
+    function startGame() {
+      rangeStart = parseInt(document.getElementById("rangeStart").value);
+      rangeEnd = parseInt(document.getElementById("rangeEnd").value);
+
+      if (rangeStart >= rangeEnd) {
+        alert("Invalid range. Please make sure the start number is smaller than the end number.");
+        return;
+      }
+
+      randomNumber = Math.floor(Math.random() * (rangeEnd - rangeStart + 1)) + rangeStart;
+      isGameOver = false;
+      document.getElementById("retryButton").style.display = "none";
+      document.getElementById("result").innerHTML = "";
+      document.getElementById("guessInput").value = "";
+      document.getElementById("guessInput").disabled = false;
+      document.getElementById("rangeStart").disabled = true;
+      document.getElementById("rangeEnd").disabled = true;
+      document.getElementById("startButton").disabled = true;
+      document.getElementById("checkButton").disabled = false;
+    }
+
+    // Function to check the user's guess
+    function checkGuess() {
+      if (isGameOver) return;
+
+      const guess = parseInt(document.getElementById("guessInput").value);
+
+      if (isNaN(guess) || guess < rangeStart || guess > rangeEnd) {
+        document.getElementById("result").innerHTML = "Please enter a valid number within the specified range.";
+        return;
+      }
+
+      if (guess === randomNumber) {
+        document.getElementById("result").innerHTML = "Congratulations! You guessed the correct number!";
+        isGameOver = true;
+        document.getElementById("guessInput").disabled = true;
+        document.getElementById("retryButton").style.display = "block";
+      } else if (guess < randomNumber) {
+        document.getElementById("result").innerHTML = "Too low! Try again.";
+      } else {
+        document.getElementById("result").innerHTML = "Too high! Try again.";
+      }
+    }
+
+    // Function to reset the game
+    function resetGame() {
+      document.getElementById("rangeStart").disabled = false;
+      document.getElementById("rangeEnd").disabled = false;
+      document.getElementById("startButton").disabled = false;
+      startGame();
+    }
+  </script>
+</body>
+</html>
